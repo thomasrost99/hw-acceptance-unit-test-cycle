@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
-ruby '>= 2.4.0', '< 2.6'
+ruby '>= 2.4.0', '< 2.7'
 gem 'rails', '4.2.10'
+gem 'simplecov', :require => false 
 
 # for Heroku deployment - as described in Ap. A of ELLS book
 group :development, :test do

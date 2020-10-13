@@ -1,0 +1,64 @@
+Using the default profile...
+Feature: search for movies by director
+  As a movie buff
+  So that I can find movies with my favorite director
+  I want to include and serach on director information in movies I enter
+
+  Background: movies in database      # features/new_feature.feature:7
+    Given the following movies exist: # features/step_definitions/movies_steps.rb:2
+      | title        | rating | director     | release_date |
+      | Star Wars    | PG     | George Lucas | 1977-05-25   |
+      | Blade Runner | PG     | Ridley Scott | 1982-06-25   |
+      | Alien        | R      |              | 1979-05-25   |
+      | THX-1138     | R      | George Lucas | 1971-03-11   |
+
+  Scenario: add director to existing movie                # features/new_feature.feature:16
+    When I go to the edit page for "Alien"                # features/step_definitions/web_steps.rb:48
+    And I fill in "Director" with "Ridley Scott"          # features/step_definitions/web_steps.rb:60
+    And I press "Update Movie Info"                       # features/step_definitions/web_steps.rb:52
+    Then the director of "Alien" should be "Ridley Scott" # features/step_definitions/movies_steps.rb:8
+
+  Scenario: find movie with same director                       # features/new_feature.feature:22
+    Given I am on the details page for "Star Wars"              # features/step_definitions/web_steps.rb:44
+    When I follow "Find Movies With Same Director"              # features/step_definitions/web_steps.rb:56
+    Then I should be on the Similar Movies page for "Star Wars" # features/step_definitions/web_steps.rb:230
+    And I should see "THX-1138"                                 # features/step_definitions/web_steps.rb:105
+    But I should not see "Blade Runner"                         # features/step_definitions/web_steps.rb:123
+
+  Scenario: can't find similar movies if we don't know director (sad path) # features/new_feature.feature:29
+    Given I am on the details page for "Alien"                             # features/step_definitions/web_steps.rb:44
+    Then I should not see "Ridley Scott"                                   # features/step_definitions/web_steps.rb:123
+    When I follow "Find Movies With Same Director"                         # features/step_definitions/web_steps.rb:56
+    Then I should be on the home page                                      # features/step_definitions/web_steps.rb:230
+    And I should see "'Alien' has no director info"                        # features/step_definitions/web_steps.rb:105
+
+  Scenario: this scenario is for extra tests!          # features/new_feature.feature:36
+    When I am on the details page for "Blade Runner"   # features/step_definitions/web_steps.rb:44
+    And I press "Delete"                               # features/step_definitions/web_steps.rb:52
+    Then I should see "Movie 'Blade Runner' deleted"   # features/step_definitions/web_steps.rb:105
+    And I should not see "Ridley Scott"                # features/step_definitions/web_steps.rb:123
+    When I am on the home page                         # features/step_definitions/web_steps.rb:44
+    And I follow "Add new movie"                       # features/step_definitions/web_steps.rb:56
+    And I fill in "Title" with "Pizza"                 # features/step_definitions/web_steps.rb:60
+    Then I press "Save Changes"                        # features/step_definitions/web_steps.rb:52
+    And I should see "Pizza was successfully created." # features/step_definitions/web_steps.rb:105
+
+  Scenario: more tests!                                 # features/new_feature.feature:47
+    When I am on the home page                          # features/step_definitions/web_steps.rb:44
+    When I follow "Movie Title"                         # features/step_definitions/web_steps.rb:56
+    Then I should see "Blade Runner" before "Star Wars" # features/step_definitions/movies_steps.rb:17
+
+  Scenario: more tests 3!                               # features/new_feature.feature:52
+    When I am on the home page                          # features/step_definitions/web_steps.rb:44
+    When I follow "Release Date"                        # features/step_definitions/web_steps.rb:56
+    Then I should see "Star Wars" before "Blade Runner" # features/step_definitions/movies_steps.rb:17
+
+  Scenario: more tests 4!                               # features/new_feature.feature:57
+    When I am on the home page                          # features/step_definitions/web_steps.rb:44
+    When I follow "Director"                            # features/step_definitions/web_steps.rb:56
+    Then I should see "Star Wars" before "Blade Runner" # features/step_definitions/movies_steps.rb:17
+
+7 scenarios (7 passed)
+39 steps (39 passed)
+0m0.465s
+Coverage report generated for Cucumber Features to /home/ubuntu/environment/hw-acceptance-unit-test-cycle/rottenpotatoes/coverage. 53 / 53 LOC (100.0%) covered.
